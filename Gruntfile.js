@@ -4,6 +4,13 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('./package.json'),
 
+    config: {
+      src: 'src',
+      dist: 'dist',
+      assets: '<%= config.src %>/assets',
+      data: grunt.file.readJSON('pages.json')
+    },
+
     connect: {
       dev: {
         options: {
@@ -17,28 +24,24 @@ module.exports = function (grunt) {
     /* assemble templating */
     assemble: {
       options: {
-        collections: [{
-          name: 'post',
-          sortby: 'posted',
-          sortorder: 'descending'
-        }],
         helpers: './src/bonnet/helpers/**/*.js',
         layout: 'page.hbs',
         layoutdir: './src/bonnet/layouts/',
         partials: './src/bonnet/partials/**/*'
       },
-      posts: {
-        files: [{
-          cwd: './src/content/',
-          dest: './dist/',
-          expand: true,
-          src: ['**/*.hbs', '!_pages/**/*.hbs']
-        }, {
-          cwd: './src/content/_pages/',
-          dest: './dist/',
-          expand: true,
-          src: '**/*.hbs'
-        }]
+      pages10: {
+        options: {
+          tag: 'pages10',
+          pages: '<%= config.data.pages10 %>',
+        },
+        files: { '<%= config.dist %>/': 'All the files' }
+      },
+      pages11: {
+        options: {
+          tag: 'pages11',
+          pages: '<%= config.data.pages11 %>',
+        },
+        files: { '<%= config.dist %>/': 'All the files' }
       }
     }
   });
@@ -48,6 +51,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('assemble');
 
   /* grunt tasks */
-  grunt.registerTask('default', ['assemble', 'connect']);
+  grunt.registerTask('default', ['assemble']);
 
 };
